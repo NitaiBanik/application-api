@@ -40,6 +40,17 @@ You'll need Go 1.21 or newer installed on your machine.
 go build -o application-api main.go
 ```
 
+### Run tests
+```bash
+go test ./...
+```
+
+Run specific tests:
+```bash
+go test ./handlers   
+go test -run TestAPI
+```
+
 ## How the service works
 
 ### POST /testapi
