@@ -45,7 +45,7 @@ func TestAPI(t *testing.T) {
 		},
 	}
 
-	client := &http.Client{}
+	httpClient := &http.Client{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -53,7 +53,7 @@ func TestAPI(t *testing.T) {
 			req, _ := http.NewRequest("POST", "http://localhost:8080/testapi", bytes.NewBuffer(body))
 			req.Header.Set("Content-Type", "application/json")
 
-			resp, err := client.Do(req)
+			resp, err := httpClient.Do(req)
 			if err != nil {
 				t.Fatalf("Request failed: %v", err)
 			}

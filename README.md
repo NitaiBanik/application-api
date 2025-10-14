@@ -1,6 +1,6 @@
 # Application API
 
-A simple Go HTTP API that echoes back whatever JSON you send to it. Pretty handy for testing things out or when you need a basic API that just returns what you put in.
+A simple Go HTTP API that returns back whatever valid JSON send to it. 
 
 
 ## Getting started
@@ -40,6 +40,7 @@ You'll need Go 1.21 or newer installed on your machine.
 go build -o application-api main.go
 ```
 
+128302@@ni
 ### Run tests
 ```bash
 go test ./...
