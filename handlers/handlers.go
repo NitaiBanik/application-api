@@ -29,12 +29,6 @@ type HealthResponse struct {
 func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Test API request received - %s %s from %s", r.Method, r.URL.Path, r.RemoteAddr)
 
-	if r.Method != http.MethodPost {
-		log.Printf("Invalid method %s for testapi endpoint", r.Method)
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 
 	var payload TestApiRequest
@@ -62,11 +56,6 @@ func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) HealthHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 
 	response := HealthResponse{

@@ -30,6 +30,11 @@ You'll need Go 1.21 or newer installed on your machine.
      -d '{"message": "Hello World"}'
    ```
 
+### Quick start with testing
+```bash
+./run-and-test.sh
+```
+
 ### Build it
 ```bash
 go build -o application-api main.go
@@ -94,6 +99,7 @@ application-api/
 ├── main.go              # Where it all starts
 ├── go.mod               # Dependencies
 ├── env.example          # Environment variables template
+├── run-and-test.sh      # Script to run and test the API
 ├── config/
 │   └── config.go        # Handles environment variables
 ├── handlers/
