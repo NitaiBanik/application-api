@@ -24,13 +24,6 @@ type HealthResponse struct {
 	Status    string    `json:"status"`
 	Service   string    `json:"service"`
 	Timestamp time.Time `json:"timestamp"`
-	Version   string    `json:"version"`
-}
-
-type InfoResponse struct {
-	Message   string   `json:"message"`
-	Endpoints []string `json:"endpoints"`
-	Version   string   `json:"version"`
 }
 
 func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +73,6 @@ func (h *Handler) HealthHandler(w http.ResponseWriter, r *http.Request) {
 		Status:    "healthy",
 		Service:   "application-api",
 		Timestamp: time.Now().UTC(),
-		Version:   "1.0.0",
 	}
 
 	w.WriteHeader(http.StatusOK)
