@@ -28,6 +28,10 @@ type HealthResponse struct {
 
 func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Test API request received - %s %s from %s", r.Method, r.URL.Path, r.RemoteAddr)
+	port := r.Host
+	if port == "" {
+		port = "unknown"
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -44,6 +48,12 @@ func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	requestNum := "unknown"
+	if num, ok := payload["request_number"]; ok {
+		requestNum = fmt.Sprintf("%v", num)
+	}
+
+	log.Printf("APP-API-%s: Processing request #%s", port, requestNum)
 	response := TestApiResponse{
 		Data:      payload,
 		Timestamp: time.Now().UTC(),
