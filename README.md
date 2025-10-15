@@ -1,7 +1,6 @@
 # Application API
 
-A simple Go HTTP API that echoes back whatever JSON you send to it. Pretty handy for testing things out or when you need a basic API that just returns what you put in.
-
+A simple Go HTTP API that returns back whatever valid JSON send to it. 
 
 ## Getting started
 
