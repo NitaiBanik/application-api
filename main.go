@@ -31,11 +31,8 @@ func main() {
 	router.HandleFunc("/health", handler.HealthHandler).Methods("GET")
 
 	server := &http.Server{
-		Addr:         ":" + cfg.Port,
-		Handler:      router,
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		Addr:    ":" + cfg.Port,
+		Handler: router,
 	}
 
 	go func() {

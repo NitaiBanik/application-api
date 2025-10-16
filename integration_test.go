@@ -11,12 +11,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAPI(t *testing.T) {
+func startServer() *exec.Cmd {
 	cmd := exec.Command("go", "run", "main.go")
 	cmd.Start()
-	defer cmd.Process.Kill()
-
 	time.Sleep(2 * time.Second)
+	return cmd
+}
+
+func TestAPI(t *testing.T) {
+	cmd := startServer()
+	defer cmd.Process.Kill()
 
 	tests := []struct {
 		name           string
@@ -65,8 +69,6 @@ func TestAPI(t *testing.T) {
 				var response map[string]interface{}
 				err := json.NewDecoder(resp.Body).Decode(&response)
 				assert.NoError(t, err)
-				assert.NotNil(t, response["data"])
-				assert.NotNil(t, response["timestamp"])
 
 				originalData, _ := json.Marshal(tt.body)
 				echoedData, _ := json.Marshal(response["data"])
@@ -74,4 +76,25 @@ func TestAPI(t *testing.T) {
 			}
 		})
 	}
+
+}
+
+func TestHealthEndpoint(t *testing.T) {
+	cmd := startServer()
+	defer cmd.Process.Kill()
+
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/health", nil)
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Fatalf("Health check failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	assert.Equal(t, 200, resp.StatusCode)
+
+	var response map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	assert.NoError(t, err)
+	assert.Equal(t, "healthy", response["status"])
 }

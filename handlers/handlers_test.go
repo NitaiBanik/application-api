@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"bytes"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,62 +14,42 @@ func TestTestApiHandler(t *testing.T) {
 
 	tests := []struct {
 		name           string
-		method         string
-		body           interface{}
+		body           string
 		expectedStatus int
-		expectedData   interface{}
 	}{
 		{
-			name:           "should process valid JSON and return 200",
-			method:         "POST",
-			body:           map[string]interface{}{"message": "Hello", "test": true},
+			name:           "valid JSON",
+			body:           `{"message": "Hello"}`,
 			expectedStatus: 200,
-			expectedData:   map[string]interface{}{"message": "Hello", "test": true},
 		},
 		{
-			name:           "should reject empty JSON with 400 error",
-			method:         "POST",
-			body:           map[string]interface{}{},
+			name:           "empty JSON",
+			body:           `{}`,
 			expectedStatus: 400,
-			expectedData:   nil,
 		},
 		{
-			name:           "should handle complex nested JSON structures",
-			method:         "POST",
-			body:           map[string]interface{}{"user": map[string]interface{}{"id": 123, "name": "Test"}, "items": []int{1, 2, 3}},
-			expectedStatus: 200,
-			expectedData:   map[string]interface{}{"user": map[string]interface{}{"id": 123, "name": "Test"}, "items": []int{1, 2, 3}},
+			name:           "invalid JSON",
+			body:           `{invalid json}`,
+			expectedStatus: 400,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var body []byte
-			if tt.body != nil {
-				body, _ = json.Marshal(tt.body)
-			}
-
-			req, _ := http.NewRequest(tt.method, "/testapi", bytes.NewBuffer(body))
-			req.Header.Set("Content-Type", "application/json")
-
+			req, _ := http.NewRequest("POST", "/testapi", bytes.NewBuffer([]byte(tt.body)))
 			w := httptest.NewRecorder()
-
 			handler.TestApiHandler(w, req)
-
 			assert.Equal(t, tt.expectedStatus, w.Code)
-
-			if tt.expectedData != nil && w.Code == 200 {
-				var response TestApiResponse
-				err := json.Unmarshal(w.Body.Bytes(), &response)
-				assert.NoError(t, err)
-
-				expectedJSON, _ := json.Marshal(tt.expectedData)
-				actualJSON, _ := json.Marshal(response.Data)
-				assert.Equal(t, string(expectedJSON), string(actualJSON))
-
-				assert.NotNil(t, response.Timestamp)
-				assert.Equal(t, "application/json", w.Header().Get("Content-Type"))
-			}
 		})
 	}
+}
+
+func TestHealthHandler(t *testing.T) {
+	handler := NewHandler()
+	req, _ := http.NewRequest("GET", "/health", nil)
+	w := httptest.NewRecorder()
+
+	handler.HealthHandler(w, req)
+
+	assert.Equal(t, 200, w.Code)
 }

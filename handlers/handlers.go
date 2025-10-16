@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 )
 
 type Handler struct{}
@@ -16,24 +15,20 @@ func NewHandler() *Handler {
 type TestApiRequest map[string]interface{}
 
 type TestApiResponse struct {
-	Data      TestApiRequest `json:"data"`
-	Timestamp time.Time      `json:"timestamp"`
+	Data TestApiRequest `json:"data"`
 }
 
 type HealthResponse struct {
-	Status    string    `json:"status"`
-	Service   string    `json:"service"`
-	Timestamp time.Time `json:"timestamp"`
+	Status string `json:"status"`
 }
 
 func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Test API request received - %s %s from %s", r.Method, r.URL.Path, r.RemoteAddr)
+
 	port := r.Host
 	if port == "" {
 		port = "unknown"
 	}
-
-	w.Header().Set("Content-Type", "application/json")
 
 	var payload TestApiRequest
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
@@ -49,26 +44,14 @@ func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("APP-API-%s: Processing request", port)
-	response := TestApiResponse{
-		Data:      payload,
-		Timestamp: time.Now().UTC(),
-	}
 
+	response := TestApiResponse{Data: payload}
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		log.Printf("Failed to encode response: %v", err)
-	}
+	json.NewEncoder(w).Encode(response)
 }
 
 func (h *Handler) HealthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	response := HealthResponse{
-		Status:    "healthy",
-		Service:   "application-api",
-		Timestamp: time.Now().UTC(),
-	}
-
+	response := HealthResponse{Status: "healthy"}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
