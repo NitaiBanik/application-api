@@ -48,12 +48,7 @@ func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestNum := "unknown"
-	if num, ok := payload["request_number"]; ok {
-		requestNum = fmt.Sprintf("%v", num)
-	}
-
-	log.Printf("APP-API-%s: Processing request #%s", port, requestNum)
+	log.Printf("APP-API-%s: Processing request", port)
 	response := TestApiResponse{
 		Data:      payload,
 		Timestamp: time.Now().UTC(),
