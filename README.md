@@ -31,7 +31,7 @@ You'll need Go 1.21 or newer installed on your machine.
 
 ### Quick start with testing
 ```bash
-./run-and-test.sh
+./run.sh
 ```
 
 ### Build it
