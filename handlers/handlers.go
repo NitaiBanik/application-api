@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Handler struct{}
@@ -23,22 +24,18 @@ type HealthResponse struct {
 }
 
 func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Test API request received - %s %s from %s", r.Method, r.URL.Path, r.RemoteAddr)
-
-	port := r.Host
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = "unknown"
 	}
 
 	var payload TestApiRequest
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		log.Printf("Failed to decode JSON: %v", err)
 		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
 		return
 	}
 
 	if len(payload) == 0 {
-		log.Printf("Empty payload received")
 		http.Error(w, "Request body cannot be empty", http.StatusBadRequest)
 		return
 	}
