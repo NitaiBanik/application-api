@@ -34,6 +34,8 @@ You'll need Go 1.21 or newer installed on your machine.
 ./run.sh
 ```
 
+This will start 3 instances on ports 8080, 8081, and 8082 for load balancing testing.
+
 ### Build it
 ```bash
 go build -o application-api main.go
@@ -69,8 +71,7 @@ You'll get back:
     "key": "value",
     "number": 42,
     "array": [1, 2, 3]
-  },
-  "timestamp": "2024-01-01T12:00:00Z"
+  }
 }
 ```
 
@@ -84,9 +85,7 @@ curl http://localhost:8080/health
 
 ```json
 {
-  "status": "healthy",
-  "service": "application-api",
-  "timestamp": "2024-01-01T12:00:00Z"
+  "status": "healthy"
 }
 ```
 
@@ -109,7 +108,7 @@ application-api/
 ├── main.go              # Where it all starts
 ├── go.mod               # Dependencies
 ├── env.example          # Environment variables template
-├── run-and-test.sh      # Script to run and test the API
+├── run.sh               # Script to run multiple instances
 ├── config/
 │   └── config.go        # Handles environment variables
 ├── handlers/
@@ -118,3 +117,26 @@ application-api/
 │   └── middleware.go    # Logging and other middleware
 └── README.md            # This file
 ```
+
+## Integration with Routing API
+
+This application API is designed to work with the routing API for load balancing:
+
+1. **Start multiple instances:**
+   ```bash
+   ./run.sh
+   ```
+   This starts instances on ports 8080, 8081, and 8082.
+
+2. **Start the routing API** (in the routing-api directory):
+   ```bash
+   ./run.sh
+   ```
+
+3. **Test load balancing:**
+   ```bash
+   # Requests to routing API (port 3000) will be distributed across application APIs
+   curl -X POST http://localhost:3000/testapi \
+     -H "Content-Type: application/json" \
+     -d '{"message": "test load balancing"}'
+   ```
