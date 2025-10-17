@@ -17,12 +17,11 @@ func LoggingMiddleware() func(http.Handler) http.Handler {
 
 			duration := time.Since(start)
 
-			log.Printf("%s %s %d %v %s",
+			log.Printf("%s %s %d %v",
 				r.Method,
 				r.URL.Path,
 				wrapped.statusCode,
 				duration,
-				r.RemoteAddr,
 			)
 		})
 	}
