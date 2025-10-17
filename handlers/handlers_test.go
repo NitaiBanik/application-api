@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTestApiHandler(t *testing.T) {
+func TestTestAPIHandler(t *testing.T) {
 	handler := NewHandler()
 
 	tests := []struct {
@@ -38,7 +38,7 @@ func TestTestApiHandler(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			req, _ := http.NewRequest("POST", "/testapi", bytes.NewBuffer([]byte(tt.body)))
 			w := httptest.NewRecorder()
-			handler.TestApiHandler(w, req)
+			handler.TestAPIHandler(w, req)
 			assert.Equal(t, tt.expectedStatus, w.Code)
 		})
 	}

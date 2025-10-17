@@ -13,23 +13,23 @@ func NewHandler() *Handler {
 	return &Handler{}
 }
 
-type TestApiRequest map[string]interface{}
+type TestAPIRequest map[string]interface{}
 
-type TestApiResponse struct {
-	Data TestApiRequest `json:"data"`
+type TestAPIResponse struct {
+	Data TestAPIRequest `json:"data"`
 }
 
 type HealthResponse struct {
 	Status string `json:"status"`
 }
 
-func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) TestAPIHandler(w http.ResponseWriter, r *http.Request) {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "unknown"
 	}
 
-	var payload TestApiRequest
+	var payload TestAPIRequest
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
 		return
@@ -42,7 +42,7 @@ func (h *Handler) TestApiHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("APP-API-%s: Processing request", port)
 
-	response := TestApiResponse{Data: payload}
+	response := TestAPIResponse{Data: payload}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }

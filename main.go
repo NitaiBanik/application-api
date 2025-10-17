@@ -27,7 +27,7 @@ func main() {
 
 	router.Use(middleware.LoggingMiddleware())
 
-	router.HandleFunc("/testapi", handler.TestApiHandler).Methods("POST")
+	router.HandleFunc("/testapi", handler.TestAPIHandler).Methods("POST")
 	router.HandleFunc("/health", handler.HealthHandler).Methods("GET")
 
 	server := &http.Server{
